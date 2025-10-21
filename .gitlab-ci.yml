@@ -6,6 +6,7 @@ variables:
 
 stages:
   - build
+  - test
 
 before_script:
   - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
@@ -15,3 +16,20 @@ build:
   script:
     - docker compose build
     - docker compose push
+
+test:
+  variables:
+    COMPOSE_PROJECT_NAME: counter_$CI_JOB_ID
+  parallel:
+    matrix:
+      - TEST:
+          - tests
+          - ab-be-api
+          - ab-be
+          - ab-fe
+  script:
+    - make use-tests
+    - docker compose pull
+    - docker compose run $TEST
+  after_script:
+    - docker compose down
