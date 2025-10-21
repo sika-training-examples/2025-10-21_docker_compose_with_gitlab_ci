@@ -40,6 +40,7 @@ deploy:
     COMPOSE_PROJECT_NAME: counter-$CI_COMMIT_REF_SLUG
     DOCKER_HOST: ssh://root@docker.sikademo.com
     HOST: counter-$CI_COMMIT_REF_SLUG.docker.sikademo.com
+    TRAEFIK_NAME: $CI_COMMIT_REF_SLUG
   stage: deploy
   script:
     - mkdir -p ~/.ssh
